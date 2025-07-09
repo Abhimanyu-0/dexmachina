@@ -338,7 +338,8 @@ def main(args):
     kwargs = prepare_cfgs(
         args, hand_name, obj_name, start, end, subject_name, use_clip
         )
-    retargeters, world_data, input_fname  = prepare_retarget_cfgs(args, hand_name, obj_name, kwargs['robot_cfgs'], subject_name, use_clip)
+    retargeters, world_data, input_fname  = prepare_retarget_cfgs(
+        args, hand_name, obj_name, kwargs['robot_cfgs'], subject_name, use_clip)
     retarget_type = args.retarget_type if 'shadow' not in hand_name else 'position'
 
     assert not (args.replay_only and args.save), "Cannot save and replay at the same time" 

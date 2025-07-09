@@ -1,0 +1,26 @@
+left: 
+  type: vector 
+  urdf_path: left/mano_limited.urdf 
+  target_joint_names:  null 
+  target_origin_link_names: ["palm"]
+  target_task_link_names: [ "thumb3", "thumb2", thumb1, "index3", "index2", "index1", "middle3", "middle2", "middle1", "ring3", "ring2", "ring1", "pinky3", "pinky2", "pinky1"]
+  target_link_human_indices: [ [0], [15, 14, 13,  3, 2,1, 6,5,4, 12, 11, 10, 9, 8, 7] ]
+ 
+
+  add_dummy_free_joint: False 
+  low_pass_alpha: 1
+  scaling_factor: 0.8
+  ignore_mimic_joint:  True
+
+right: 
+  type: vector 
+  urdf_path: right/mano_limited.urdf
+  target_joint_names: null
+  target_origin_link_names: ["palm"]
+  target_task_link_names: [ "thumb3", "thumb2", thumb1, "index3", "index2", "index1", "middle3", "middle2", "middle1", "ring3", "ring2", "ring1", "pinky3", "pinky2", "pinky1"]
+  target_link_human_indices: [ [0], [15, 14, 13,  3, 2,1, 6,5,4, 12, 11, 10, 9, 8, 7] ]
+  add_dummy_free_joint: False
+  
+  low_pass_alpha: 1
+  scaling_factor: 0.8 
+  ignore_mimic_joint: True

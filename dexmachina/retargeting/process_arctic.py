@@ -11,15 +11,15 @@ from copy import deepcopy
 parser = argparse.ArgumentParser(description="Process ARCTIC data to get contact information")
 # add arguments
 parser.add_argument("--processed_fname", "-p", type=str, default="/home/mandi/arctic/outputs/processed_verts/seqs/s01/box_use_01.npy", help="Path to the processed ARCTIC data")
-parser.add_argument("--skip_visualization", "-sv", action="store_true", help="Skip visualization")
 parser.add_argument("--contact_threshold", "-ct", type=float, default=0.01, help="Contact threshold")
 parser.add_argument("--max_contact_per_step", "-max", type=int, default=50, help="Max contact points per step")
 parser.add_argument("--farthest_sample", "-fs", action="store_true", help="Sample farthest contact points")
 parser.add_argument("--save", "-s", action="store_true", help="Save the processed data")
 parser.add_argument("--overwrite", "-ow", action="store_true", help="Overwrite the processed data")
 parser.add_argument("--debug", "-db", action="store_true", help="Visualize the processed data")
-# parse the arguments
-args_cli = parser.parse_args()
+parser.add_argument("--mano_model_dir", "-mmd", type=str, default="/home/mandi/", help="Path to the mano model directory")
+parser.add_argument("--save_dir", "-sd", type=str, default="assets/arctic/processed", help="Path to save the processed data")
+args = parser.parse_args()
 
 def axis_angle_to_quaternion(axis_angle: torch.Tensor) -> torch.Tensor:
     """
@@ -157,17 +157,12 @@ def find_closest_link(contact_points, joint_points):
         avg_contact_positions[idx] = np.concatenate([weighted_avg_position, [voted_part_id]])
     return avg_contact_positions 
 
-SAVE_DIR = "assets/arctic/processed"
-path_mean_r = "assets/mano-urdf/right_pose_mean.txt"
-path_mean_l = "assets/mano-urdf/left_pose_mean.txt"
+path_mean_r = "assets/mano_hand/right_pose_mean.txt"
+path_mean_l = "assets/mano_hand/left_pose_mean.txt"
 pose_mean_r = np.loadtxt(path_mean_r, dtype=np.float32)
 pose_mean_l = np.loadtxt(path_mean_l, dtype=np.float32)
 
-HOME_DIR="/home/mandiz"
-if not os.path.exists(HOME_DIR):
-    HOME_DIR="/home/mandi"
-    assert os.path.exists(HOME_DIR), f"{HOME_DIR} does not exist"
-fname = args_cli.processed_fname
+fname = args.processed_fname
 assert os.path.exists(fname), f"{fname} does not exist"
 arctic_data = np.load(fname, allow_pickle=True).item() # array of shape (T, 7)
 world_data = arctic_data["world_coord"]
@@ -179,13 +174,13 @@ verts_obj = world_data["verts.object"] # shape (T=605, 3580, 3)
 part_ids = world_data["parts_ids"] # shape (T, 3580)
 num_steps = params["obj_trans"].shape[0]
 
-if args_cli.debug:
-    assert not args_cli.save, "Cannot save and debug at the same time"
+if args.debug:
+    assert not args.save, "Cannot save and debug at the same time"
     print(f"Only processing {num_steps} steps")
     num_steps = 200
 # approx contact points
-contact_thres = args_cli.contact_threshold
-max_contact_per_step = args_cli.max_contact_per_step
+contact_thres = args.contact_threshold
+max_contact_per_step = args.max_contact_per_step
 contacts_left = np.zeros((num_steps, max_contact_per_step, 4))
 contact_part_ids_left = np.zeros((num_steps, max_contact_per_step), dtype=int)
 
@@ -205,7 +200,7 @@ for step in range(num_steps):
         if contacts.shape[0] == 0:
             continue
         num_contacts = min(max_contact_per_step, contacts.shape[0])
-        if args_cli.farthest_sample:
+        if args.farthest_sample:
             contacts_hand = farthest_sample_contact(contacts_hand, num_contacts)
             contacts  = farthest_sample_contact(contacts, num_contacts)
         else:
@@ -252,7 +247,7 @@ tosave = {
     }, 
     }
 
-MANO_MODELS_DIR=f"{HOME_DIR}/mano_v1_2/models"
+MANO_MODELS_DIR=f"{args.mano_model_dir}/mano_v1_2/models"
 left_hand_model = HandModel45(left_hand=True, models_dir=MANO_MODELS_DIR)
 left_mano_hand = HandBody(
     left_hand_model, 
@@ -316,15 +311,15 @@ tosave["params"]["right_quat"] = np.stack(right_quats, axis=0)
 # save the data
 filename = fname.split("/")[-1]
 subject_name = fname.split("/")[-2]
-save_fname = f"{SAVE_DIR}/{subject_name}/{filename}"  
-if os.path.exists(save_fname) and args_cli.save and not args_cli.overwrite:
+save_folder = f"{args.save_dir}/{subject_name}"
+os.makedirs(save_folder, exist_ok=True)
+
+save_fname = f"{save_folder}/{filename}"  
+if os.path.exists(save_fname) and args.save and not args.overwrite:
     print("WARNING -", f"{save_fname} already exists, overwrite?")
     breakpoint()
-if args_cli.save:
+if args.save:
     np.save(save_fname, tosave)
 # try loading
 loaded = np.load(save_fname, allow_pickle=True).item() # loaded to dict 
 print(f"Saved to {save_fname}")
-if args_cli.skip_visualization:
-    print("Skipping visualization")
-exit(0)

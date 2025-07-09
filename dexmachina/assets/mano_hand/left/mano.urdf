@@ -1,0 +1,634 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mano_hand">
+  <link name="root"/>
+  <link name="palm_x_link"/>
+  <link name="palm_y_link"/>
+  <link name="palm_z_link"/>
+  <link name="palm_roll_link"/>
+  <link name="palm_pitch_link"/>
+  <link name="palm_yaw_link"/>
+  <link name="palm_fixed_link"/>
+  <link name="palm">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/palm.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/palm_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="root_joint_fixed" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="root"/>
+    <child link="palm_x_link"/>
+  </joint>
+  <joint name="palm_x_joint" type="prismatic">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm_x_link"/>
+    <child link="palm_y_link"/>
+    <limit effort="0.35" lower="-10.000000" upper="10.000000" velocity="10"/>
+  </joint>
+  <joint name="palm_y_joint" type="prismatic">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm_y_link"/>
+    <child link="palm_z_link"/>
+    <limit effort="0.35" lower="-10.000000" upper="10.000000" velocity="10"/>
+  </joint>
+  <joint name="palm_z_joint" type="prismatic">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm_z_link"/>
+    <child link="palm_yaw_link"/>
+    <limit effort="0.35" lower="-10.000000" upper="10.000000" velocity="10"/>
+  </joint>
+  <joint name="palm_yaw_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm_yaw_link"/>
+    <child link="palm_pitch_link"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <joint name="palm_pitch_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm_pitch_link"/>
+    <child link="palm_roll_link"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <joint name="palm_roll_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm_roll_link"/>
+    <child link="palm_fixed_link"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <joint name="palm_joint_fixed" type="fixed">
+    <axis xyz="0 0 0"/>
+    <origin xyz="-0.095670 0.006383 0.006186" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm_fixed_link"/>
+    <child link="palm"/>
+  </joint>
+  <link name="index1_x"/>
+  <joint name="index1_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.088097 -0.005200 0.020686" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm"/>
+    <child link="index1_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="index1_y"/>
+  <joint name="index1_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index1_x"/>
+    <child link="index1_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="index1">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/index1.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/index1_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="index1_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index1_y"/>
+    <child link="index1"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="index2_x"/>
+  <joint name="index2_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.032679 0.004009 0.002217" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index1"/>
+    <child link="index2_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="index2_y"/>
+  <joint name="index2_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index2_x"/>
+    <child link="index2_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="index2">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/index2.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/index2_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="index2_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index2_y"/>
+    <child link="index2"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="index3_x"/>
+  <joint name="index3_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.022156 -0.001298 -0.000114" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index2"/>
+    <child link="index3_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="index3_y"/>
+  <joint name="index3_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index3_x"/>
+    <child link="index3_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="index3">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/index3.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/index3_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="index3_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="index3_y"/>
+    <child link="index3"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="middle1_x"/>
+  <joint name="middle1_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.094660 -0.001479 -0.003358" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm"/>
+    <child link="middle1_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="middle1_y"/>
+  <joint name="middle1_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle1_x"/>
+    <child link="middle1_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="middle1">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/middle1.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/middle1_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="middle1_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle1_y"/>
+    <child link="middle1"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="middle2_x"/>
+  <joint name="middle2_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.031183 0.001861 -0.005595" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle1"/>
+    <child link="middle2_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="middle2_y"/>
+  <joint name="middle2_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle2_x"/>
+    <child link="middle2_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="middle2">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/middle2.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/middle2_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="middle2_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle2_y"/>
+    <child link="middle2"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="middle3_x"/>
+  <joint name="middle3_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.022905 -0.001252 -0.003945" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle2"/>
+    <child link="middle3_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="middle3_y"/>
+  <joint name="middle3_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle3_x"/>
+    <child link="middle3_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="middle3">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/middle3.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/middle3_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="middle3_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="middle3_y"/>
+    <child link="middle3"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="pinky1_x"/>
+  <joint name="pinky1_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.068787 -0.009940 -0.043209" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm"/>
+    <child link="pinky1_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="pinky1_y"/>
+  <joint name="pinky1_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky1_x"/>
+    <child link="pinky1_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="pinky1">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/pinky1.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/pinky1_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pinky1_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky1_y"/>
+    <child link="pinky1"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="pinky2_x"/>
+  <joint name="pinky2_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.017014 0.000062 -0.012499" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky1"/>
+    <child link="pinky2_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="pinky2_y"/>
+  <joint name="pinky2_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky2_x"/>
+    <child link="pinky2_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="pinky2">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/pinky2.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/pinky2_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pinky2_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky2_y"/>
+    <child link="pinky2"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="pinky3_x"/>
+  <joint name="pinky3_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.015867 -0.000691 -0.010332" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky2"/>
+    <child link="pinky3_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="pinky3_y"/>
+  <joint name="pinky3_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky3_x"/>
+    <child link="pinky3_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="pinky3">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/pinky3.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/pinky3_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="pinky3_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="pinky3_y"/>
+    <child link="pinky3"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="ring1_x"/>
+  <joint name="ring1_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.081736 -0.003957 -0.026673" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm"/>
+    <child link="ring1_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="ring1_y"/>
+  <joint name="ring1_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring1_x"/>
+    <child link="ring1_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="ring1">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/ring1.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/ring1_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="ring1_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring1_y"/>
+    <child link="ring1"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="ring2_x"/>
+  <joint name="ring2_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.028314 0.002067 -0.005099" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring1"/>
+    <child link="ring2_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="ring2_y"/>
+  <joint name="ring2_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring2_x"/>
+    <child link="ring2_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="ring2">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/ring2.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/ring2_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="ring2_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring2_y"/>
+    <child link="ring2"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="ring3_x"/>
+  <joint name="ring3_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.023521 -0.001688 -0.007634" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring2"/>
+    <child link="ring3_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="ring3_y"/>
+  <joint name="ring3_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring3_x"/>
+    <child link="ring3_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="ring3">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/ring3.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/ring3_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="ring3_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="ring3_y"/>
+    <child link="ring3"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="thumb1_x"/>
+  <joint name="thumb1_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.024090 -0.015522 0.025813" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="palm"/>
+    <child link="thumb1_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="thumb1_y"/>
+  <joint name="thumb1_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb1_x"/>
+    <child link="thumb1_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="thumb1">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/thumb1.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/thumb1_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="thumb1_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb1_y"/>
+    <child link="thumb1"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="thumb2_x"/>
+  <joint name="thumb2_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.019633 0.000891 0.023700" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb1"/>
+    <child link="thumb2_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="thumb2_y"/>
+  <joint name="thumb2_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb2_x"/>
+    <child link="thumb2_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="thumb2">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/thumb2.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/thumb2_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="thumb2_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb2_y"/>
+    <child link="thumb2"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="thumb3_x"/>
+  <joint name="thumb3_x_joint" type="revolute">
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.022218 -0.005433 0.014524" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb2"/>
+    <child link="thumb3_x"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+  <link name="thumb3_y"/>
+  <joint name="thumb3_y_joint" type="revolute">
+    <axis xyz="0 1 0"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb3_x"/>
+    <child link="thumb3_y"/>
+    <limit effort="0.35" lower="-1.570796" upper="1.570796" velocity="10"/>
+  </joint>
+  <link name="thumb3">
+    <visual>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/thumb3.stl"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+      <geometry>
+        <mesh filename="meshes/thumb3_collision.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="thumb3_z_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <origin xyz="0.000000 0.000000 0.000000" rpy="0.000000 0.000000 0.000000"/>
+    <parent link="thumb3_y"/>
+    <child link="thumb3"/>
+    <limit effort="0.35" lower="-3.141593" upper="3.141593" velocity="10"/>
+  </joint>
+</robot>

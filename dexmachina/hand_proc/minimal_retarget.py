@@ -263,8 +263,7 @@ def main(args):
 
         scene.step()
         if args.record_video:
-            frame, depth_arr, seg_arr, normal_arr = camera.render(segmentation=True)
-            
+            frame, depth_arr, seg_arr, normal_arr = camera.render(segmentation=True) 
             # frame = frame.copy()
             # frame[seg_arr==0, :] = 255 # make background white
             frames.append(frame)

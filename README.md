@@ -42,6 +42,8 @@ pip install -e .
 Additional packages needed for RL training:
 ```
 pip install gymnasium ray seaborn wandb trimesh
+# an old version of moviepy
+pip install moviepy==1.0.3
 ```
 
 **If you'd like to install the full conda environment that includes all the packages, use the below yaml file:**
