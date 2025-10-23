@@ -176,27 +176,28 @@ def get_filtered_contacts(
     - contact_force_a_geom: (N, n_geom_a, n_geom_b, 3) -> aggregated contact force on geom_a (flip sign for geom_b)
     - contact_force_a_link: (N, n_link_a, n_link_b, 3) -> aggregated contact force on link_a (flip sign for link_b)
     """
-    contact_data = entity_a._solver.collider.contact_data # get all the data!
+    # Genesis 0.3.3 API: use get_contacts() method instead of .contact_data
+    contact_data = entity_a._solver.collider.get_contacts(as_tensor=True, to_torch=True)
     # NOTE need to use this to mask out invalid contacts!
-    n_contacts = entity_a._solver.collider.n_contacts.to_torch(device=device) # size [N] 
-    # this returns a dict of key, tensor pairs: (can also do it separately: contact_data.geom_0.to_torch())
-    # geom_a : torch.Size([500, N])
-    # geom_b : torch.Size([500, N])
-    # penetration : torch.Size([500, N])
-    # normal : torch.Size([500, N, 3])
-    # pos : torch.Size([500, N, 3])
-    # friction : torch.Size([500, 1])
-    # sol_params : torch.Size([500, N, 7])
-    # force : torch.Size([500, N, 3])
-    # link_a : torch.Size([500, N])
-    # link_b : torch.Size([500, N])
-    # num_envs = n_contacts.shape[0]  
-    force = contact_data.force.to_torch(device=device) # size [500, N, 3]
+    n_contacts_raw = entity_a._solver.collider._collider_state.n_contacts.to_numpy()
+    n_contacts = torch.tensor(n_contacts_raw, dtype=torch.int32, device=device) # size [N]
+    # Genesis 0.3.3 returns dict with shape (N, n_contacts_max, ...) - need to transpose to (n_contacts_max, N, ...)
+    # Keys: 'link_a', 'link_b', 'geom_a', 'geom_b', 'penetration', 'position', 'normal', 'force'
+    # geom_a : torch.Size([N, 500])
+    # geom_b : torch.Size([N, 500])
+    # penetration : torch.Size([N, 500])
+    # normal : torch.Size([N, 500, 3])
+    # position : torch.Size([N, 500, 3])  (was 'pos' in old API)
+    # force : torch.Size([N, 500, 3])
+    # link_a : torch.Size([N, 500])
+    # link_b : torch.Size([N, 500])
+    # num_envs = n_contacts.shape[0]
+    force = contact_data['force'].transpose(0, 1) # transpose to size [500, N, 3]
     contact_info = dict()
 
     if return_geom_force or return_geom_pos:
-        geom_a = contact_data.geom_a.to_torch(device=device) # size [500, N]
-        geom_b = contact_data.geom_b.to_torch(device=device) # size [500, N]
+        geom_a = contact_data['geom_a'].transpose(0, 1) # transpose to size [500, N]
+        geom_b = contact_data['geom_b'].transpose(0, 1) # transpose to size [500, N]
         if len(filter_geoms_a) == 0:
             geom_a_idxs = torch.tensor([i for i in range(entity_a.geom_start, entity_a.geom_end)]).to(force.device)
         else:
@@ -208,8 +209,8 @@ def get_filtered_contacts(
         geom_mask = get_expanded_mask(n_contacts, geom_a, geom_b, geom_a_idxs, geom_b_idxs)
 
     if return_link_force or return_link_pos:
-        link_a = contact_data.link_a.to_torch(device=device) # size [500, N]
-        link_b = contact_data.link_b.to_torch(device=device) # size [500, N]
+        link_a = contact_data['link_a'].transpose(0, 1) # transpose to size [500, N]
+        link_b = contact_data['link_b'].transpose(0, 1) # transpose to size [500, N]
 
         if len(filter_links_a) > 0:
             # assert is tensor:
@@ -243,7 +244,7 @@ def get_filtered_contacts(
     
     if return_geom_pos or return_link_pos:
          ### Get contact positions by geom ###
-        contact_pos = contact_data.pos.to_torch(device=device) # size [500, N, 3]
+        contact_pos = contact_data['position'].transpose(0, 1) # transpose to size [500, N, 3]
         
 
     if return_geom_pos: # 

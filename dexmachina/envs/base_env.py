@@ -53,7 +53,7 @@ def get_scene_cfg(
             constraint_solver=gs.constraint_solver.Newton,
             enable_collision=True,
             enable_joint_limit=enable_joint_limit,
-            max_collision_pairs=100, # default was 100
+            max_collision_pairs=500, # increased from 100 to handle complex collision scenarios
             batch_dofs_info=batch_dofs_info,
         ),
         viewer_options=gs.options.ViewerOptions( 
@@ -208,10 +208,11 @@ class BaseEnv:
         
         if self.group_collisions:
             print('Setting the SAME collision grouping to both hands')
+            # Note: self_collision_group_filter and link_group_mapping not available in Genesis 0.3.3
             self.scene_cfg['rigid_options'].enable_self_collision = True
-            self.scene_cfg['rigid_options'].self_collision_group_filter = True
-            collision_groups = robot_cfgs['left'].get('collision_groups', dict())
-            self.scene_cfg['rigid_options'].link_group_mapping = collision_groups
+            # self.scene_cfg['rigid_options'].self_collision_group_filter = True
+            # collision_groups = robot_cfgs['left'].get('collision_groups', dict())
+            # self.scene_cfg['rigid_options'].link_group_mapping = collision_groups
         if render_figure:
             print("Disabling gravity for figure rendering")
             self.scene_cfg['sim_options'].gravity = (0, 0, 0)

@@ -296,25 +296,27 @@ def main(args):
         )
 
     if args.group_collisions:
+        # Note: self_collision_group_filter and link_group_mapping not available in Genesis 0.3.3
         # add link grouping info to rigid options
-        scene_cfg['rigid_options'].self_collision_group_filter = True
-        if 'allegro' in str(args.urdf_path):
-            mapping = {8: 0, 13: 1, 14: 2, 15: 3, 16: 4, 17: 1, 18: 2, 19: 3, 20: 4, 21: 1, 22: 2, 23: 3, 24: 4, 25: 1, 26: 2, 27: 3, 28: 4}
-        elif 'schunk' in str(args.urdf_path):
-            mapping = {7: 0, 8: 0, 13: 1, 14: 1, 15: 2, 16: 3, 17: 4, 18: 1, 19: 1, 20: 2, 21: 3, 22: 4, 23: 1, 24: 1, 25: 2, 26: 3, 27: 4, 28: 1, 29: 1}
-        elif 'shadow' in str(args.urdf_path):
-            mapping  = {7: 0, 8: 0, 9: 0, 17: 3, 18: 4, 19: 5, 20: 6, 21: 7, 22: 3, 23: 4, 24: 5, 25: 6, 26: 7, 27: 3, 28: 4, 29: 5, 30: 6, 31: 7, 35: 6, 36: 7}
-        elif 'xhand' in str(args.urdf_path):
-            mapping = {7: 0, 13: 1, 14: 2, 15: 3, 16: 4, 17: 5, 18: 1, 19: 2}
-        elif 'ability' in str(args.urdf_path):
-            mapping = {7: 0, 8: 0, 14: 1, 15: 2, 16: 3, 17: 4, 18: 5}
-        elif 'inspire' in str(args.urdf_path):
-            mapping = {7: 0, 13: 1, 14: 2, 15: 3, 16: 4, 17: 5, 18: 1, 23: 1}
-        elif 'mimic' in str(args.urdf_path):
-            mapping = {7: 0, 14: 2, 15: 3, 16: 4, 17: 5, 18: 6, 19: 2, 20: 3, 21: 4, 22: 5, 23: 6, 24: 2, 25: 3, 26: 4, 27: 5, 28: 6}
-        else:
-            raise NotImplementedError(f"Link grouping not implemented for {args.urdf_path}")
-        scene_cfg['rigid_options'].link_group_mapping = mapping
+        # scene_cfg['rigid_options'].self_collision_group_filter = True
+        # if 'allegro' in str(args.urdf_path):
+        #     mapping = {8: 0, 13: 1, 14: 2, 15: 3, 16: 4, 17: 1, 18: 2, 19: 3, 20: 4, 21: 1, 22: 2, 23: 3, 24: 4, 25: 1, 26: 2, 27: 3, 28: 4}
+        # elif 'schunk' in str(args.urdf_path):
+        #     mapping = {7: 0, 8: 0, 13: 1, 14: 1, 15: 2, 16: 3, 17: 4, 18: 1, 19: 1, 20: 2, 21: 3, 22: 4, 23: 1, 24: 1, 25: 2, 26: 3, 27: 4, 28: 1, 29: 1}
+        # elif 'shadow' in str(args.urdf_path):
+        #     mapping  = {7: 0, 8: 0, 9: 0, 17: 3, 18: 4, 19: 5, 20: 6, 21: 7, 22: 3, 23: 4, 24: 5, 25: 6, 26: 7, 27: 3, 28: 4, 29: 5, 30: 6, 31: 7, 35: 6, 36: 7}
+        # elif 'xhand' in str(args.urdf_path):
+        #     mapping = {7: 0, 13: 1, 14: 2, 15: 3, 16: 4, 17: 5, 18: 1, 19: 2}
+        # elif 'ability' in str(args.urdf_path):
+        #     mapping = {7: 0, 8: 0, 14: 1, 15: 2, 16: 3, 17: 4, 18: 5}
+        # elif 'inspire' in str(args.urdf_path):
+        #     mapping = {7: 0, 13: 1, 14: 2, 15: 3, 16: 4, 17: 5, 18: 1, 23: 1}
+        # elif 'mimic' in str(args.urdf_path):
+        #     mapping = {7: 0, 14: 2, 15: 3, 16: 4, 17: 5, 18: 6, 19: 2, 20: 3, 21: 4, 22: 5, 23: 6, 24: 2, 25: 3, 26: 4, 27: 5, 28: 6}
+        # else:
+        #     raise NotImplementedError(f"Link grouping not implemented for {args.urdf_path}")
+        # scene_cfg['rigid_options'].link_group_mapping = mapping
+        scene_cfg['rigid_options'].enable_self_collision = True
     scene = gs.Scene(**scene_cfg)
     
     hand_entities = dict()

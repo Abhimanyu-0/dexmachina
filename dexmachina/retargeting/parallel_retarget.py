@@ -57,20 +57,21 @@ def create_scene(
             constraint_solver=gs.constraint_solver.Newton,
             enable_collision=True,
             enable_joint_limit=True,
-            max_collision_pairs=100, # default was 100
+            max_collision_pairs=512, # increased from 100 to handle laptop's complex collision geometry
             batch_dofs_info=False, 
         ), 
         use_visualizer=(vis or record_video or render_image),
         show_viewer=vis,
         show_FPS=False,
     )
-    if group_collisions: 
+    if group_collisions:
+        # Note: self_collision_group_filter and link_group_mapping not available in Genesis 0.3.3
         scene_cfg['rigid_options'].enable_self_collision = True
-        scene_cfg['rigid_options'].self_collision_group_filter = True
-        collision_groups = robot_cfgs['left'].get('collision_groups', dict())
-        print('Setting the SAME collision grouping to both hands')
-        print(collision_groups)
-        scene_cfg['rigid_options'].link_group_mapping = collision_groups
+        # scene_cfg['rigid_options'].self_collision_group_filter = True
+        # collision_groups = robot_cfgs['left'].get('collision_groups', dict())
+        # print('Setting the SAME collision grouping to both hands')
+        # print(collision_groups)
+        # scene_cfg['rigid_options'].link_group_mapping = collision_groups
     if enable_self_collision:
         print("Enabling self collision, will slow down simulation")
         scene_cfg['rigid_options'].enable_self_collision
